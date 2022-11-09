@@ -23,27 +23,52 @@ class HomeController extends AbstractController
         return $this->render('news/news.html.twig');
     }
 
+    
+
     #[Route('/lesSeries', name: 'app_series')]
-    public function series(PdoFouDeSerie $pdoFouDeSerie): Response
-    {
-        $truc = $pdoFouDeSerie -> getLesSeries();
-        $nombreSeries = $pdoFouDeSerie->getNbSeries();
-        return $this->render('lesSeries/lesseries.html.twig', ['lesSeries' => $truc , 'nombreSeries' => $nombreSeries]);
+    public function series(ManagerRegistry $doctrine){
+        $repository = $doctrine->getRepository(Serie::class);
+        $lesSeries = $repository->findBy(
+            [],
+            ['titre' => 'ASC']
+        );
+        // $lesSeries = $repository->findBy(
+        //     [],
+        //     ['premiereDiffusion' => 'DESC'],
+        //     2
+        // );
+        $nombreSeries = count($lesSeries);
+
+        return $this->render('lesSeries/lesseries.html.twig', ['lesSeries'=> $lesSeries, 'nombreSeries' => $nombreSeries]);
     }
+
+    #[Route('/lesSeries/detail/{id}', name: 'app_detail')]
+    public function detail(ManagerRegistry $doctrine, $id): Response
+    {$repository = $doctrine->getRepository(Serie::class);
+        $laSerie = $repository->find($id);
+        return $this->render('lesSeries/detail/detail.html.twig', ['laSerie'=> $laSerie]);
+    }
+
+    // public function series(PdoFouDeSerie $pdoFouDeSerie): Response
+    // {
+    //     $truc = $pdoFouDeSerie->getLesSeries();
+    //     $nombreSeries = $pdoFouDeSerie->getNbSeries();
+    //     return $this->render('lesSeries/lesseries.html.twig', ['lesSeries' => $truc, 'nombreSeries' => $nombreSeries]);
+    // }
 
     // #[Route('/testEntity', name: 'app_testentity')]
     // public function testEntity(ManagerRegistry $doctrine): Response
     // {
-    //     $serie = new Serie();
-    //     $serie->setTitre('ok');
-    //     $serie->setResume('ok');
-    //     $serie->setDuree(new \DateTime('00:30:00'));
-    //     $serie->setPremiereDiffusion(new \DateTime('01-09-2022'));
-    //     $serie->setImage('');
-    //     $entityManager=$doctrine->getManager();
-    //     $entityManager->persist($serie);
-    //     $entityManager->flush();
+        // $serie = new Serie();
+        // $serie->setTitre('ok');
+        // $serie->setResume('ok');
+        // $serie->setDuree('00:30:00');
+        // $serie->setPremiereDiffusion(new \DateTime('01-09-2022'));
+        // $serie->setImage('');
+        // $entityManager = $doctrine->getManager();
+        // $entityManager->persist($serie);
+        // $entityManager->flush();
 
-    //     return $this->render('home/testEntity.html.twig', ['serie' => $serie]);
+        // return $this->render('home/testEntity.html.twig', ['serie' => $serie]);
     // }
 }

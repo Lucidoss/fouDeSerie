@@ -15,15 +15,11 @@
 		}
 	</style>
 	<div class="example-wrapper">
-		<h1>Les series de Fou de Séries ?</h1>
-		<h1>Il y a
-			{{ nombreSeries }}
-			series omggg </h1>
 			<ul>
-				{% for series in lesSeries %}
-					<h2>{{ series.titre }}</h2>
-					<a href="{{path('app_detail', {'id' : series.id}) }}"><img src="{{series.image}}" style="width:90vh"></a>
-				{% endfor %}
+					<h2>Titre<br>{{ laSerie.titre }}</h2>
+					<p>Resumé<br>{{ laSerie.resume }}</p>
+					<p>Premiere diffusion<br>{{ laSerie.premiereDiffusion | date("m/d/Y") }}</p>
+					<img src="{{laSerie.image}}" style="width:90vh">
 			</ul>
 		</div>
 	{% endblock %}
