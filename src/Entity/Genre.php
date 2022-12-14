@@ -26,6 +26,13 @@ class Genre
         $this->series = new ArrayCollection();
     }
 
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -51,6 +58,7 @@ class Genre
         return $this->series;
     }
 
+    
     public function addSeries(Serie $series): self
     {
         if (!$this->series->contains($series)) {
