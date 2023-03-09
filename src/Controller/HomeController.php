@@ -8,6 +8,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HomeController extends AbstractController
 {
@@ -38,8 +40,20 @@ class HomeController extends AbstractController
         //     2
         // );
         $nombreSeries = count($lesSeries);
-
         return $this->render('lesSeries/lesseries.html.twig', ['lesSeries'=> $lesSeries, 'nombreSeries' => $nombreSeries]);
+    }
+
+    #[Route('/lesSeries/{id}/like', name: 'app_serieslikes')]
+    public function getLikeOneSerie(ManagerRegistry $doctrine, $id, EntityManagerInterface $entityManager): Response
+    {
+        $repository = $doctrine->getRepository(Serie::class);
+        $laSerie = $repository->find($id);
+        $likes = $laSerie->getLikes();
+        $laSerie = $laSerie->setLikes($likes + 1);
+        $likes = $laSerie->getLikes();
+        $entityManager->persist($laSerie);
+        $entityManager->flush();
+        return new JsonResponse(['likes' => $likes]);
     }
 
     #[Route('/lesSeries/detail/{id}', name: 'app_detail')]

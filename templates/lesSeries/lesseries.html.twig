@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
-
-
+{% block stylesheets %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+{% endblock %}
+{% block javascript %}
+<script src="/js/like.js"></script>
+{% endblock %}
 {% block body %}
 	<style>
 		.example-wrapper {
@@ -23,6 +27,9 @@
 				{% for series in lesSeries %}
 					<h2>{{ series.titre }}</h2>
 					<a href="{{path('app_detail', {'id' : series.id}) }}"><img src="{{series.image}}" style="width:90vh"></a>
+					<a href="{{path('app_serieslikes', {'id' : series.id}) }}" id="likes">{{series.likes}} likes <span class="material-symbols-sharp">
+thumb_up
+</span></a>
 				{% endfor %}
 			</ul>
 		</div>

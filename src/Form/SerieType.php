@@ -27,7 +27,7 @@ class SerieType extends AbstractType
                     'class' => Genre::class,
                     'choice_label' => 'libelle', // libelle est la propriété de l'entité Genre que l'on veut afficher
                     'multiple' => true, // permet la sélection multiple
-                    'expanded' => true,
+                    'expanded' => false ,
                     'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('serie')
                             ->orderBy('serie.libelle', 'ASC');

@@ -29,6 +29,37 @@ class AdminController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    #[Route('/admin/series/all', name: 'app_admin_allSeries')]
+    public function allSeries(Request $request, ManagerRegistry $doctrine): Response
+    {
+        $repository = $doctrine->getRepository(Serie::class);
+        $lesSeries = $repository->findBy(
+            [],
+            ['titre' => 'ASC']
+        );
+        $nombreSeries = count($lesSeries);
+        return $this->render('admin/deleteSerie.html.twig', ['lesSeries'=> $lesSeries, 'nombreSeries' => $nombreSeries]);
+    }
+
+    #[Route('/admin/series/{id}', name: 'app_admin_deleteSerie', methods:'DELETE')]
+    public function deleteSerie(Request $request, ManagerRegistry $doctrine, $id): Response
+    {
+        $repository = $doctrine->getRepository(Serie::class);
+        $lesSeries = $repository->findBy(
+            [],
+            ['titre' => 'ASC']
+        );
+        $nombreSeries = count($lesSeries);
+        $laSerie = $repository->find($id);
+        $valeurDuToken = $request->get('token');
+        if($this->isCsrfTokenValid('delete_serie', $valeurDuToken)){
+            $em = $doctrine->getManager();
+            $em -> remove($laSerie);
+            $em -> flush();
+            return $this->redirectToRoute('app_admin_allSeries');
+        }
+        return $this->render('admin/deleteSerie.html.twig', ['lesSeries'=> $lesSeries, 'nombreSeries' => $nombreSeries]);
+    }
 
     #[Route('/admin/series/{id}', name: 'app_admin_editSerie')]
     public function editSerie(Request $request, ManagerRegistry $doctrine, $id): Response
